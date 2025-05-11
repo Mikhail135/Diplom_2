@@ -16,32 +16,23 @@ def create_user():
         "password": password,
         "name": name
     }
-
-    # Создаем пользователя
     register_response = requests.post(f"{Data.BASE_URL}/auth/register", json=payload)
     if register_response.status_code != 200:
         logging.error(f"Failed to create user: {register_response.text}")
-        yield None  # Прерываем выполнение фикстуры, если пользователь не создан
-        return
+        yield None
 
     # Авторизуемся для получения токена
     login_payload = {"email": email, "password": password}
     login_response = requests.post(f"{Data.BASE_URL}/auth/login", json=login_payload)
     if login_response.status_code != 200:
         logging.error(f"Failed to login: {login_response.text}")
-        yield None  # Прерывание выполнение фикстуры, если авторизация не удалась
-        return
+        yield None
 
     token = login_response.json().get("accessToken")
     if not token:
         logging.error("Access token is missing in the login response")
-        yield None  # Прерываем выполнение фикстуры, если токен отсутствует
-        return
-
-    # Возвращаем данные пользователя
+        yield
     yield {"email": email, "password": password, "name": name, "token": token}
-
-    # Удаляем пользователя после завершения теста
     delete_headers = {"Authorization": f"Bearer {token}"}
     delete_response = requests.delete(f"{Data.BASE_URL}/auth/user", headers=delete_headers)
     if delete_response.status_code != 200:
@@ -49,12 +40,9 @@ def create_user():
 
 @pytest.fixture(scope="function")
 def auth_token(create_user):
-    """Фикстура для получения токена авторизации."""
     email = create_user["email"]
     password = create_user["password"]
     payload = {"email": email, "password": password}
     response = requests.post(f"{Data.BASE_URL}/auth/login", json=payload)
-    assert response.status_code == 200, f"Failed to login: {response.text}"
     token = response.json()["accessToken"]
-    print(f"Generated token: {token}")  #
     return token

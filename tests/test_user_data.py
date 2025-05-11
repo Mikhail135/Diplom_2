@@ -15,11 +15,7 @@ class TestUserDataAPI:
             "email": unique_email,
             "name": "Updated Name"
         }
-        print(f"Headers: {headers}")  # Отладочный вывод
-        print(f"Payload: {payload}")  # Отладочный вывод
         response = requests.patch(f"{Data.BASE_URL}/auth/user", headers=headers, json=payload)
-        print(f"Response status code: {response.status_code}")  # Отладочный вывод
-        print(f"Response body: {response.json()}")  # Отладочный вывод
         assert response.status_code == 200, f"Expected status code 200 for authorized update, but got {response.status_code}: {response.text}"
         assert response.json()["user"]["email"] == unique_email, "Email should be updated"
 
