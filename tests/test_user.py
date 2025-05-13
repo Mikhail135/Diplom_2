@@ -3,10 +3,10 @@ import requests
 from data import Data
 import time
 
-@allure.feature("User API")
+@allure.title("User API")
 class TestUserAPI:
 
-    @allure.story("Create Unique User")
+    @allure.title("Create Unique User")
     def test_create_unique_user(self):
         unique_email = f"unique_user_{int(time.time())}@example.com"  # Генерация уникального email
         payload = {
@@ -18,7 +18,7 @@ class TestUserAPI:
         assert response.status_code == 200, "Expected status code 200 for unique user"
         assert response.json()["success"], "Response should indicate success"
 
-    @allure.story("Create Existing User")
+    @allure.title("Create Existing User")
     def test_create_existing_user(self):
         payload = {
             "email": "existing_user@example.com",
@@ -29,7 +29,7 @@ class TestUserAPI:
         assert response.status_code == 403, "Expected status code 403 for existing user"
         assert response.json()["message"] == "User already exists", "Incorrect error message"
 
-    @allure.story("Create User with Missing Fields")
+    @allure.title("Create User with Missing Fields")
     def test_create_user_with_missing_fields(self):
         payload = {
             "email": "incomplete_user@example.com"
@@ -38,7 +38,7 @@ class TestUserAPI:
         assert response.status_code == 403, "Expected status code 403 for missing fields"
         assert response.json()["message"] == "Email, password and name are required fields", "Incorrect error message"
 
-    @allure.story("Login with Valid Credentials")
+    @allure.title("Login with Valid Credentials")
     def test_login_with_valid_credentials(self):
         payload = {
             "email": "existing_user@example.com",
@@ -48,7 +48,7 @@ class TestUserAPI:
         assert response.status_code == 200, "Expected status code 200 for valid credentials"
         assert response.json()["success"], "Response should indicate success"
 
-    @allure.story("Login with Invalid Credentials")
+    @allure.title("Login with Invalid Credentials")
     def test_login_with_invalid_credentials(self):
         payload = {
             "email": "nonexistent@example.com",

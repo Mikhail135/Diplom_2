@@ -3,9 +3,9 @@ import requests
 from data import Data
 
 
-@allure.feature("Orders API")
+@allure.title("Orders API")
 class TestOrdersAPI:
-    @allure.story("Create Order with Auth")
+    @allure.title("Create Order with Auth")
     def test_create_order_with_auth(self, auth_token):
         headers = {"Authorization": f"{auth_token}"}
         payload = {
@@ -15,21 +15,21 @@ class TestOrdersAPI:
         assert response.status_code == 200, "Expected status code 200 for order creation"
         assert "order" in response.json(), "Response should contain 'order' field"
 
-    @allure.story("Create Order without Ingredients")
+    @allure.title("Create Order without Ingredients")
     def test_create_order_without_ingredients(self, auth_token):
         headers = {"Authorization": f"{auth_token}"}
         response = requests.post(f"{Data.BASE_URL}/orders", headers=headers, json={})
         assert response.status_code == 400, "Expected status code 400 for missing ingredients"
         assert response.json()["message"] == "Ingredient ids must be provided", "Incorrect error message"
 
-    @allure.story("Get User Orders with Auth")
+    @allure.title("Get User Orders with Auth")
     def test_get_user_orders_with_auth(self, auth_token):
         headers = {"Authorization": f"{auth_token}"}
         response = requests.get(f"{Data.BASE_URL}/orders", headers=headers)
         assert response.status_code == 200, "Expected status code 200 for fetching orders"
         assert "orders" in response.json(), "Response should contain 'orders' field"
 
-    @allure.story("Get User Orders without Auth")
+    @allure.title("Get User Orders without Auth")
     def test_get_user_orders_without_auth(self):
         response = requests.get(f"{Data.BASE_URL}/orders")
         assert response.status_code == 401, "Expected status code 401 for unauthorized access"

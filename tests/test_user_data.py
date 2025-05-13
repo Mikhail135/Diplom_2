@@ -3,11 +3,11 @@ import requests
 import time
 from data import Data
 
-@allure.feature("User Data API")
+@allure.title("User Data API")
 class TestUserDataAPI:
     import time
 
-    @allure.story("Update User Data with Auth")
+    @allure.title("Update User Data with Auth")
     def test_update_user_data_with_auth(self, auth_token):
         headers = {"Authorization": f"{auth_token}"}
         unique_email = f"updated_user_{int(time.time())}@example.com"
@@ -19,7 +19,7 @@ class TestUserDataAPI:
         assert response.status_code == 200, f"Expected status code 200 for authorized update, but got {response.status_code}: {response.text}"
         assert response.json()["user"]["email"] == unique_email, "Email should be updated"
 
-    @allure.story("Update User Data without Auth")
+    @allure.title("Update User Data without Auth")
     def test_update_user_data_without_auth(self):
         payload = {
             "email": "updated_user@example.com",
